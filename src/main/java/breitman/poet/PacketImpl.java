@@ -1,6 +1,9 @@
 package breitman.poet;
 
-import static breitman.poet.Type.*;
+import static breitman.poet.Type.BOOLEAN;
+import static breitman.poet.Type.BYTE;
+import static breitman.poet.Type.Throwing;
+import static breitman.poet.Type.VAR_INT;
 
 import io.netty.buffer.ByteBuf;
 import java.util.Collection;
@@ -18,17 +21,17 @@ public class PacketImpl implements Packet {
   }
 
   @Override
-  public <T> void write(@NotNull Type<T> type, @NotNull T value) {
+  public <T> void write(@NotNull Type<T> type, T value) {
     type.write(buf, value);
   }
 
   @Override
-  public <T> void write(@NotNull Type.Throwing<T> type, @NotNull T value) throws Throwable {
+  public <T> void write(@NotNull Type.Throwing<T> type, T value) throws Throwable {
     type.write(buf, value);
   }
 
   @Override
-  public <T> void write(@NotNull Throwing<T> type, @NotNull T value, @Nullable Consumer<Throwable> exceptionally) {
+  public <T> void write(@NotNull Throwing<T> type, T value, @Nullable Consumer<Throwable> exceptionally) {
     try {
       write(type, value);
     } catch (Throwable e) {
@@ -51,7 +54,7 @@ public class PacketImpl implements Packet {
   }
 
   @Override
-  public <T> void writeCollection(@NotNull Type<T> type, @NotNull T @Nullable ... values) {
+  public <T> void writeCollection(@NotNull Type<T> type, T... values) {
     writeCollection(type, values == null ? null : List.of(values));
   }
 
@@ -68,7 +71,7 @@ public class PacketImpl implements Packet {
   }
 
   @Override
-  public <T> void writeCollection(@NotNull Throwing<T> type, @Nullable Collection<@NotNull T> values,
+  public <T> void writeCollection(@NotNull Throwing<T> type, Collection<T> values,
                                   @Nullable Consumer<Throwable> exceptionally) {
     try {
       writeCollection(type, values);
@@ -80,7 +83,7 @@ public class PacketImpl implements Packet {
   }
 
   @Override
-  public <T> void writeCollection(@NotNull Type.Throwing<T> type, @NotNull T @Nullable ... values) throws Throwable {
+  public <T> void writeCollection(@NotNull Type.Throwing<T> type, T... values) throws Throwable {
     writeCollection(type, values == null ? null : List.of(values));
   }
 
