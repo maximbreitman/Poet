@@ -85,6 +85,37 @@ public class PacketImpl implements Packet {
   }
 
   @Override
+  public <T> void writeOptional(@NotNull Type<T> type, @Nullable T value) {
+    write(BOOLEAN, value != null);
+    if (value != null) {
+      write(type, value);
+    }
+  }
+
+  @Override
+  public <T> void writeOptional(@NotNull Throwing<T> type, @Nullable T value) throws Throwable {
+    write(BOOLEAN, value != null);
+    if (value != null) {
+      write(type, value);
+    }
+  }
+
+  @Override
+  public <T> void writeOptional(@NotNull Throwing<T> type, @Nullable T value,
+                                @Nullable Consumer<Throwable> exceptionally) {
+    write(BOOLEAN, value != null);
+    if (value != null) {
+      try {
+        write(type, value);
+      } catch (Throwable e) {
+        if (exceptionally != null) {
+          exceptionally.accept(e);
+        }
+      }
+    }
+  }
+
+  @Override
   public @NotNull ByteBuf bytes() {
     return this.buf;
   }

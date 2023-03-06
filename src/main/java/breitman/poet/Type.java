@@ -7,6 +7,7 @@ import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
 @FunctionalInterface
 public interface Type<T> {
@@ -60,6 +61,22 @@ public interface Type<T> {
     }
   };
 
+  Type<Long> VAR_LONG = (buf, value) -> {
+    while (true) {
+      if ((value & ~((long) 0x7F)) == 0) {
+        buf.writeByte((byte) value.intValue());
+        return;
+      }
+
+      buf.writeByte((byte) (value & 0x7F | 0x80));
+
+      // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
+      value >>>= 7;
+    }
+  };
+
+  Type<byte[]> RAW_BYTES = ByteBuf::writeBytes;
+
   Type<String> STRING = (buf, string) -> {
     final int size = ByteBufUtil.utf8Bytes(string);
     VAR_INT.write(buf, size);
@@ -76,7 +93,7 @@ public interface Type<T> {
     buf.writeLong(uuid.getLeastSignificantBits());
   };
 
-  Type<? extends Enum<?>> ENUM = (buf, value) -> {
+  Type<Enum<?>> ENUM = (buf, value) -> {
     VAR_INT.write(buf, value.ordinal());
   };
 
@@ -85,12 +102,37 @@ public interface Type<T> {
     buf.writeBytes(array);
   };
 
-  void write(@NotNull ByteBuf buf, @NotNull T t);
+  Type<long[]> LONG_ARRAY = (buf, array) -> {
+    VAR_INT.write(buf, array.length);
+    for (long value : array) {
+      buf.writeLong(value);
+    }
+  };
+
+  Type<int[]> VAR_INT_ARRAY = (buf, array) -> {
+    VAR_INT.write(buf, array.length);
+    for (int value : array) {
+      VAR_INT.write(buf, value);
+    }
+  };
+
+  Type<long[]> VAR_LONG_ARRAY = (buf, array) -> {
+    VAR_INT.write(buf, array.length);
+    for (long value : array) {
+      VAR_LONG.write(buf, value);
+    }
+  };
+
+  Type<Integer> OPT_VAR_INT = (buf, value) -> {
+    VAR_INT.write(buf, value == null ? 0 : value + 1);
+  };
+
+  void write(@NotNull ByteBuf buf, @UnknownNullability T t);
 
   @FunctionalInterface
   interface Throwing<T> {
 
-    void write(@NotNull ByteBuf buf, @NotNull T t) throws Throwable;
+    void write(@NotNull ByteBuf buf, @UnknownNullability T t) throws Throwable;
 
   }
 

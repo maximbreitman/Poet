@@ -24,6 +24,12 @@ public interface Packet {
 
   <T> void writeCollection(@NotNull Type.Throwing<T> type, @NotNull T @Nullable ... values) throws Throwable;
 
+  <T> void writeOptional(@NotNull Type<T> type, @Nullable T value);
+
+  <T> void writeOptional(@NotNull Type.Throwing<T> type, @Nullable T value) throws Throwable;
+
+  <T> void writeOptional(@NotNull Type.Throwing<T> type, @Nullable T value, @Nullable Consumer<Throwable> exceptionally);
+
   @NotNull ByteBuf bytes();
 
 }
