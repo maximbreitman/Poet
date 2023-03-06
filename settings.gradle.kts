@@ -12,3 +12,6 @@ pluginManagement {
 }
 
 rootProject.name = "Poet"
+include("poet-api")
+include("poet-paper")
+include("poet-spigot")
