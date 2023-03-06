@@ -1,8 +1,9 @@
 package breitman.poet;
 
 import io.netty.channel.Channel;
-import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Function;
 
 public final class PoetImpl<T> extends AbstractPoet<T> {
 

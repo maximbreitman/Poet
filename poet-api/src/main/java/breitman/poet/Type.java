@@ -2,12 +2,13 @@ package breitman.poet;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
+
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @FunctionalInterface
 public interface Type<T> {

@@ -1,16 +1,14 @@
 package breitman.poet;
 
-import static breitman.poet.Type.BOOLEAN;
-import static breitman.poet.Type.BYTE;
-import static breitman.poet.Type.Throwing;
-import static breitman.poet.Type.VAR_INT;
-
 import io.netty.buffer.ByteBuf;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import static breitman.poet.Type.*;
 
 public class PacketImpl implements Packet {
 

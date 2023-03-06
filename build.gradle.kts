@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    id ("com.github.johnrengelman.shadow") version "8.1.0"
 }
 
 group = "breitman"
@@ -15,12 +16,12 @@ java {
 }
 
 dependencies {
-    compileOnly("io.netty:netty-all:4.1.87.Final")
+    compileOnlyApi("io.netty:netty-all:4.1.87.Final")
 
-    compileOnly("net.kyori:adventure-api:4.12.0")
-    compileOnly("net.kyori:adventure-text-serializer-gson:4.12.0")
+    compileOnlyApi("net.kyori:adventure-api:4.12.0")
+    compileOnlyApi("net.kyori:adventure-text-serializer-gson:4.12.0")
 
-    compileOnly("org.jetbrains:annotations:24.0.1")
+    compileOnlyApi("org.jetbrains:annotations:24.0.1")
 }
 
 publishing {
@@ -28,5 +29,13 @@ publishing {
         create<MavenPublication>("maven") {
             from(components["java"])
         }
+    }
+}
+
+subprojects {
+    apply(plugin = "java-library")
+    apply(plugin = "com.github.johnrengelman.shadow")
+    dependencies {
+        compileOnly(rootProject)
     }
 }
